@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<VBox alignment="CENTER" spacing="20" styleClass="main-container" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml" fx:controller="com.filetransfer.FileTransferController">
+    
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
+
+    <HBox alignment="CENTER_RIGHT" spacing="10">
+        <Button fx:id="logoutButton" text="Logout" onAction="#handleLogout" styleClass="logout-button" />
+        <Button fx:id="gamesButton" text="Games" onAction="#handleGames" styleClass="games-button" />
+    </HBox>
+
+    <Text styleClass="title-text" text="File Transfer"/>
+    
+    <HBox spacing="20" alignment="CENTER">
+        <VBox spacing="15" styleClass="transfer-container">
+            <Text styleClass="section-title" text="Send File"/>
+            <TextField fx:id="receiverIpField" promptText="Receiver IP Address" styleClass="text-field"/>
+            <Button fx:id="selectFileButton" text="Select File" onAction="#handleSelectFile" styleClass="transfer-button"/>
+            <Button fx:id="sendFileButton" text="Send File" onAction="#handleSendFile" styleClass="transfer-button" disable="true"/>
+            <ProgressBar fx:id="sendProgressBar" progress="0.0" styleClass="progress-bar"/>
+            <Label fx:id="sendStatusLabel" styleClass="status-label"/>
+        </VBox>
+
+        <VBox spacing="15" styleClass="transfer-container">
+            <Text styleClass="section-title" text="Receive File"/>
+            <Button fx:id="startReceivingButton" text="Start Receiving" onAction="#handleStartReceiving" styleClass="transfer-button"/>
+            <Button fx:id="stopReceivingButton" text="Stop Receiving" onAction="#handleStopReceiving" styleClass="transfer-button" disable="true"/>
+            <ProgressBar fx:id="receiveProgressBar" progress="0.0" styleClass="progress-bar"/>
+            <Label fx:id="receiveStatusLabel" styleClass="status-label"/>
+        </VBox>
+    </HBox>
+
+    <VBox spacing="10" styleClass="history-container">
+        <Text styleClass="section-title" text="Transfer History"/>
+        <TableView fx:id="transferHistoryTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="fileNameColumn" text="File Name"/>
+                <TableColumn fx:id="fileSizeColumn" text="Size"/>
+                <TableColumn fx:id="transferTypeColumn" text="Type"/>
+                <TableColumn fx:id="statusColumn" text="Status"/>
+                <TableColumn fx:id="dateColumn" text="Date"/>
+            </columns>
+        </TableView>
+    </VBox>
+</VBox> 

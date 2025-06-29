@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<VBox alignment="CENTER" spacing="30" styleClass="games-container" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml" fx:controller="com.filetransfer.GamesController">
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
+    <Text styleClass="title-text" text="Games"/>
+    <HBox spacing="30" alignment="CENTER">
+        <Button fx:id="ticTacToeButton" text="Tic Tac Toe" onAction="#openTicTacToe" styleClass="game-select-button" />
+        <Button fx:id="snakeWaterGunButton" text="Snake Water Gun" onAction="#openSnakeWaterGun" styleClass="game-select-button" />
+        <Button fx:id="guessNumberButton" text="Guess the Number" onAction="#openGuessNumber" styleClass="game-select-button" />
+    </HBox>
+    <StackPane fx:id="gamePane" styleClass="game-pane" VBox.vgrow="ALWAYS" />
+</VBox> 
