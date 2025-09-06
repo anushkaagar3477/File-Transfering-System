@@ -183,7 +183,6 @@ public class DatabaseUtil {
         return history;
     }
 
-    // Helper for formatting file size
     private static String formatFileSize(long bytes) {
         if (bytes < 1024)
             return bytes + " B";
@@ -192,7 +191,6 @@ public class DatabaseUtil {
         return String.format("%.1f %sB", bytes / Math.pow(1024, exp), pre);
     }
 
-    // Helper to get user ID by IP (if you store last_ip in users table)
     public static int getUserIdByIp(String ip) {
         String query = "SELECT id FROM users WHERE last_ip = ?";
         try (Connection conn = getConnection();

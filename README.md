@@ -1,21 +1,25 @@
-# File Transfer Application
+# ByteRace
 
-A modern JavaFX application for secure file transfer between users with MySQL database integration.
+A modern JavaFX application for secure file transfer between users with MySQL database integration, now featuring built-in mini-games for enhanced user experience.
 
 ## Features
 
 - User authentication (login/signup)
-- Secure file transfer
+- Secure file transfer over TCP/IP
 - Real-time transfer progress
 - Transfer history tracking
-- Modern UI with animations
+- Modern UI with animations and improved UX
 - MySQL database integration
+- **Integrated Mini-Games:**
+  - Tic Tac Toe (2-player and vs Computer)
+  - Snake Water Gun
+  - Guess the Number
+- Easy logout and session management
 
 ## Prerequisites
 
 - Java 17 or higher
 - MySQL Server
-- Maven
 
 ## Setup
 
@@ -28,18 +32,16 @@ CREATE DATABASE filetransfer;
 ```java
 private static final String URL = "jdbc:mysql://localhost:3306/filetransfer";
 private static final String USER = "root";
-private static final String PASSWORD = "";
+private static final String PASSWORD = "root";
 ```
 
-3. Build the project:
-```bash
-mvn clean install
+3. Build and run the project using the provided batch script:
+```bat
+run.bat
 ```
 
-4. Run the application:
-```bash
-mvn javafx:run
-```
+   - This script will compile the Java files, copy resources, and launch the application.
+   - Make sure your MySQL server is running before starting the application.
 
 ## Usage
 
@@ -53,6 +55,9 @@ mvn javafx:run
    - Click "Start Receiving"
    - Wait for incoming files
    - Click "Stop Receiving" when done
+5. To play games:
+   - Click the "Games" button on the main screen
+   - Choose from Tic Tac Toe, Snake Water Gun, or Guess the Number
 
 ## Project Structure
 
@@ -62,10 +67,12 @@ mvn javafx:run
   - `LoginController.java` - Login view controller
   - `SignupController.java` - Signup view controller
   - `FileTransferController.java` - File transfer operations
+  - `GamesController.java` - Mini-games logic and UI
 - `src/main/resources/fxml/`
   - `login.fxml` - Login view
   - `signup.fxml` - Signup view
   - `filetransfer.fxml` - File transfer view
+  - `games.fxml` - Games view
 - `src/main/resources/styles/`
   - `main.css` - Application styling
 
@@ -73,4 +80,4 @@ mvn javafx:run
 
 - The application uses basic authentication
 - File transfers are done over TCP/IP
-- In a production environment, implement proper password hashing and encryption 
+- **In a production environment, implement proper password hashing and encryption** 

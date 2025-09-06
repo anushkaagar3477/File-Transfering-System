@@ -11,9 +11,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.GridPane;
 
 public class GamesController {
-    @FXML private StackPane gamePane;
+    @FXML
+    private StackPane gamePane;
 
-    // Session stats for Tic Tac Toe
     private int tttXWins = 0;
     private int tttOWins = 0;
     private int tttDraws = 0;
@@ -34,29 +34,36 @@ public class GamesController {
         grid.setVgap(5);
         grid.setAlignment(Pos.CENTER);
         Button[][] cells = new Button[3][3];
-        final String[] currentPlayer = {"X"};
-        final boolean[] gameOver = {false};
+        final String[] currentPlayer = { "X" };
+        final boolean[] gameOver = { false };
         Button playAgainBtn = new Button("Play Again");
         playAgainBtn.setVisible(false);
         Button vsAIButton = new Button("Play vs Computer");
-        vsAIButton.setStyle("-fx-background-color: #ff9800; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;");
+        vsAIButton.setStyle(
+                "-fx-background-color: #ff9800; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;");
         Label stats = new Label();
         stats.setStyle("-fx-font-size: 14px; -fx-padding: 10 0 0 0;");
-        Runnable updateStats = () -> stats.setText("X Wins: " + tttXWins + " | O Wins: " + tttOWins + " | Draws: " + tttDraws + " | Games: " + tttGames + (tttVsAI ? " | Mode: Vs Computer" : " | Mode: 2 Player"));
+        Runnable updateStats = () -> stats.setText("X Wins: " + tttXWins + " | O Wins: " + tttOWins + " | Draws: "
+                + tttDraws + " | Games: " + tttGames + (tttVsAI ? " | Mode: Vs Computer" : " | Mode: 2 Player"));
         updateStats.run();
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 Button cell = new Button("");
                 cell.setPrefSize(60, 60);
-                cell.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-background-color: #e3f2fd;");
+                cell.setStyle(
+                        "-fx-font-size: 22px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-background-color: #e3f2fd;");
                 final int row = i, col = j;
                 cell.setOnAction(e -> {
-                    if (!cell.getText().isEmpty() || gameOver[0]) return;
+                    if (!cell.getText().isEmpty() || gameOver[0])
+                        return;
                     cell.setText(currentPlayer[0]);
                     if (checkWinHighlight(cells, currentPlayer[0])) {
                         status.setText("Player " + currentPlayer[0] + " wins!");
-                        if (currentPlayer[0].equals("X")) tttXWins++; else tttOWins++;
+                        if (currentPlayer[0].equals("X"))
+                            tttXWins++;
+                        else
+                            tttOWins++;
                         tttGames++;
                         gameOver[0] = true;
                         playAgainBtn.setVisible(true);
@@ -85,7 +92,8 @@ public class GamesController {
             for (int i = 0; i < 3; i++)
                 for (int j = 0; j < 3; j++) {
                     cells[i][j].setText("");
-                    cells[i][j].setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-background-color: #e3f2fd;");
+                    cells[i][j].setStyle(
+                            "-fx-font-size: 22px; -fx-font-weight: bold; -fx-background-radius: 8; -fx-background-color: #e3f2fd;");
                 }
             currentPlayer[0] = "X";
             status.setText("Player X's turn");
@@ -104,36 +112,50 @@ public class GamesController {
         gamePane.getChildren().add(ttt);
     }
 
-    // Helper for Tic Tac Toe with highlight
     private boolean checkWinHighlight(Button[][] cells, String player) {
         for (int i = 0; i < 3; i++) {
-            if (cells[i][0].getText().equals(player) && cells[i][1].getText().equals(player) && cells[i][2].getText().equals(player)) {
-                for (int j = 0; j < 3; j++) cells[i][j].setStyle("-fx-background-color: #34a853; -fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold; -fx-background-radius: 8;");
+            if (cells[i][0].getText().equals(player) && cells[i][1].getText().equals(player)
+                    && cells[i][2].getText().equals(player)) {
+                for (int j = 0; j < 3; j++)
+                    cells[i][j].setStyle(
+                            "-fx-background-color: #34a853; -fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold; -fx-background-radius: 8;");
                 return true;
             }
-            if (cells[0][i].getText().equals(player) && cells[1][i].getText().equals(player) && cells[2][i].getText().equals(player)) {
-                for (int j = 0; j < 3; j++) cells[j][i].setStyle("-fx-background-color: #34a853; -fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold; -fx-background-radius: 8;");
+            if (cells[0][i].getText().equals(player) && cells[1][i].getText().equals(player)
+                    && cells[2][i].getText().equals(player)) {
+                for (int j = 0; j < 3; j++)
+                    cells[j][i].setStyle(
+                            "-fx-background-color: #34a853; -fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold; -fx-background-radius: 8;");
                 return true;
             }
         }
-        if (cells[0][0].getText().equals(player) && cells[1][1].getText().equals(player) && cells[2][2].getText().equals(player)) {
-            for (int j = 0; j < 3; j++) cells[j][j].setStyle("-fx-background-color: #34a853; -fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold; -fx-background-radius: 8;");
+        if (cells[0][0].getText().equals(player) && cells[1][1].getText().equals(player)
+                && cells[2][2].getText().equals(player)) {
+            for (int j = 0; j < 3; j++)
+                cells[j][j].setStyle(
+                        "-fx-background-color: #34a853; -fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold; -fx-background-radius: 8;");
             return true;
         }
-        if (cells[0][2].getText().equals(player) && cells[1][1].getText().equals(player) && cells[2][0].getText().equals(player)) {
-            for (int j = 0; j < 3; j++) cells[j][2-j].setStyle("-fx-background-color: #34a853; -fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold; -fx-background-radius: 8;");
+        if (cells[0][2].getText().equals(player) && cells[1][1].getText().equals(player)
+                && cells[2][0].getText().equals(player)) {
+            for (int j = 0; j < 3; j++)
+                cells[j][2 - j].setStyle(
+                        "-fx-background-color: #34a853; -fx-text-fill: white; -fx-font-size: 22px; -fx-font-weight: bold; -fx-background-radius: 8;");
             return true;
         }
         return false;
     }
-    // Simple AI for Tic Tac Toe (random empty cell)
-    private void aiMove(Button[][] cells, String[] currentPlayer, Label status, boolean[] gameOver, Button playAgainBtn, Runnable updateStats) {
+
+    private void aiMove(Button[][] cells, String[] currentPlayer, Label status, boolean[] gameOver, Button playAgainBtn,
+            Runnable updateStats) {
         java.util.List<int[]> empty = new java.util.ArrayList<>();
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
-                if (cells[i][j].getText().isEmpty()) empty.add(new int[]{i, j});
-        if (empty.isEmpty()) return;
-        int[] move = empty.get((int)(Math.random() * empty.size()));
+                if (cells[i][j].getText().isEmpty())
+                    empty.add(new int[] { i, j });
+        if (empty.isEmpty())
+            return;
+        int[] move = empty.get((int) (Math.random() * empty.size()));
         Button cell = cells[move[0]][move[1]];
         cell.setText("O");
         if (checkWinHighlight(cells, "O")) {
@@ -175,7 +197,7 @@ public class GamesController {
         Button playAgainBtn = new Button("Play Again");
         playAgainBtn.setVisible(false);
 
-        String[] options = {"Snake", "Water", "Gun"};
+        String[] options = { "Snake", "Water", "Gun" };
 
         Runnable reset = () -> {
             result.setText("");
@@ -186,13 +208,13 @@ public class GamesController {
         };
 
         java.util.function.Consumer<String> play = userChoice -> {
-            String compChoice = options[(int)(Math.random()*3)];
+            String compChoice = options[(int) (Math.random() * 3)];
             String outcome;
             if (userChoice.equals(compChoice)) {
                 outcome = "Draw! Both chose " + userChoice + ".";
             } else if ((userChoice.equals("Snake") && compChoice.equals("Water")) ||
-                       (userChoice.equals("Water") && compChoice.equals("Gun")) ||
-                       (userChoice.equals("Gun") && compChoice.equals("Snake"))) {
+                    (userChoice.equals("Water") && compChoice.equals("Gun")) ||
+                    (userChoice.equals("Gun") && compChoice.equals("Snake"))) {
                 outcome = "You Win! Computer chose " + compChoice + ".";
             } else {
                 outcome = "You Lose! Computer chose " + compChoice + ".";
@@ -230,7 +252,7 @@ public class GamesController {
         Button playAgainBtn = new Button("Play Again");
         playAgainBtn.setVisible(false);
 
-        final int[] number = { (int)(Math.random() * 100) + 1 };
+        final int[] number = { (int) (Math.random() * 100) + 1 };
         final int[] attempts = { 0 };
 
         guessBtn.setOnAction(e -> {
@@ -254,7 +276,7 @@ public class GamesController {
         });
 
         playAgainBtn.setOnAction(e -> {
-            number[0] = (int)(Math.random() * 100) + 1;
+            number[0] = (int) (Math.random() * 100) + 1;
             attempts[0] = 0;
             guessBtn.setDisable(false);
             guessField.setDisable(false);
@@ -270,7 +292,8 @@ public class GamesController {
     private boolean isDraw(Button[][] cells) {
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
-                if (cells[i][j].getText().isEmpty()) return false;
+                if (cells[i][j].getText().isEmpty())
+                    return false;
         return true;
     }
-} 
+}

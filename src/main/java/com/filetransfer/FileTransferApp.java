@@ -14,7 +14,6 @@ public class FileTransferApp extends Application {
 
     @Override
     public void init() {
-        // Initialize database when application starts
         DatabaseUtil.initializeDatabase();
     }
 
@@ -47,7 +46,6 @@ public class FileTransferApp extends Application {
         scene.getStylesheets().add(getClass().getResource("/styles/main.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.setTitle("File Transfer");
-        // Set a smaller default size for the file transfer window
         primaryStage.setWidth(600);
         primaryStage.setHeight(400);
     }
@@ -55,4 +53,4 @@ public class FileTransferApp extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-} 
+}

@@ -23,23 +23,40 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 
 public class FileTransferController {
-    @FXML private TextField receiverIpField;
-    @FXML private Button selectFileButton;
-    @FXML private Button sendFileButton;
-    @FXML private Button startReceivingButton;
-    @FXML private Button stopReceivingButton;
-    @FXML private ProgressBar sendProgressBar;
-    @FXML private ProgressBar receiveProgressBar;
-    @FXML private Label sendStatusLabel;
-    @FXML private Label receiveStatusLabel;
-    @FXML private TableView<TransferRecord> transferHistoryTable;
-    @FXML private TableColumn<TransferRecord, String> fileNameColumn;
-    @FXML private TableColumn<TransferRecord, String> fileSizeColumn;
-    @FXML private TableColumn<TransferRecord, String> transferTypeColumn;
-    @FXML private TableColumn<TransferRecord, String> statusColumn;
-    @FXML private TableColumn<TransferRecord, Date> dateColumn;
-    @FXML private Button logoutButton;
-    @FXML private Button gamesButton;
+    @FXML
+    private TextField receiverIpField;
+    @FXML
+    private Button selectFileButton;
+    @FXML
+    private Button sendFileButton;
+    @FXML
+    private Button startReceivingButton;
+    @FXML
+    private Button stopReceivingButton;
+    @FXML
+    private ProgressBar sendProgressBar;
+    @FXML
+    private ProgressBar receiveProgressBar;
+    @FXML
+    private Label sendStatusLabel;
+    @FXML
+    private Label receiveStatusLabel;
+    @FXML
+    private TableView<TransferRecord> transferHistoryTable;
+    @FXML
+    private TableColumn<TransferRecord, String> fileNameColumn;
+    @FXML
+    private TableColumn<TransferRecord, String> fileSizeColumn;
+    @FXML
+    private TableColumn<TransferRecord, String> transferTypeColumn;
+    @FXML
+    private TableColumn<TransferRecord, String> statusColumn;
+    @FXML
+    private TableColumn<TransferRecord, Date> dateColumn;
+    @FXML
+    private Button logoutButton;
+    @FXML
+    private Button gamesButton;
 
     private File selectedFile;
     private ServerSocket serverSocket;
@@ -50,11 +67,10 @@ public class FileTransferController {
     public void setUserId(int userId) {
         this.userId = userId;
         System.out.println("User ID set to: " + userId);
-        // Update last_ip for this user (if possible)
         try {
             String localIp = java.net.InetAddress.getLocalHost().getHostAddress();
             try (Connection conn = DatabaseUtil.getConnection();
-                 PreparedStatement pstmt = conn.prepareStatement("UPDATE users SET last_ip = ? WHERE id = ?")) {
+                    PreparedStatement pstmt = conn.prepareStatement("UPDATE users SET last_ip = ? WHERE id = ?")) {
                 pstmt.setString(1, localIp);
                 pstmt.setInt(2, userId);
                 pstmt.executeUpdate();
@@ -62,14 +78,12 @@ public class FileTransferController {
         } catch (Exception e) {
             System.err.println("Could not update last_ip for user: " + e.getMessage());
         }
-        // Load previous transfer history from the database
         transferHistory.clear();
         transferHistory.addAll(DatabaseUtil.getTransferHistory(userId));
     }
 
     @FXML
     public void initialize() {
-        // Initialize table columns
         fileNameColumn.setCellValueFactory(new PropertyValueFactory<>("fileName"));
         fileSizeColumn.setCellValueFactory(new PropertyValueFactory<>("fileSize"));
         transferTypeColumn.setCellValueFactory(new PropertyValueFactory<>("transferType"));
@@ -84,7 +98,7 @@ public class FileTransferController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select File to Send");
         selectedFile = fileChooser.showOpenDialog(selectFileButton.getScene().getWindow());
-        
+
         if (selectedFile != null) {
             sendFileButton.setDisable(false);
             sendStatusLabel.setText("File selected: " + selectedFile.getName());
@@ -102,51 +116,46 @@ public class FileTransferController {
             try {
                 Socket socket = new Socket(receiverIpField.getText(), 5000);
                 DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-                
+
                 // Send file name and size
                 dos.writeUTF(selectedFile.getName());
                 dos.writeLong(selectedFile.length());
-                
+
                 // Send file data
                 FileInputStream fis = new FileInputStream(selectedFile);
                 byte[] buffer = new byte[4096];
                 long totalBytesRead = 0;
                 int bytesRead;
-                
+
                 while ((bytesRead = fis.read(buffer)) != -1) {
                     dos.write(buffer, 0, bytesRead);
                     totalBytesRead += bytesRead;
                     double progress = (double) totalBytesRead / selectedFile.length();
                     sendProgressBar.setProgress(progress);
                 }
-                
+
                 fis.close();
                 dos.close();
                 socket.close();
-                
-                // Update UI and database
+
                 sendStatusLabel.setText("File sent successfully");
                 TransferRecord record = new TransferRecord(
-                    selectedFile.getName(),
-                    formatFileSize(selectedFile.length()),
-                    "Send",
-                    "Completed",
-                    new Date()
-                );
-                transferHistory.add(0, record); // Add to top for real-time update
-                
-                // Log to database (sender = current user, receiver = user with receiver IP if known)
+                        selectedFile.getName(),
+                        formatFileSize(selectedFile.length()),
+                        "Send",
+                        "Completed",
+                        new Date());
+                transferHistory.add(0, record);
+
                 Integer receiverId = DatabaseUtil.getUserIdByIp(receiverIpField.getText());
                 DatabaseUtil.logFileTransfer(
-                    getCurrentUserId(),
-                    receiverId != -1 ? receiverId : null,
-                    receiverIpField.getText(),
-                    selectedFile.getName(),
-                    selectedFile.length(),
-                    "Completed"
-                );
-                
-                // Show alert for successful send
+                        getCurrentUserId(),
+                        receiverId != -1 ? receiverId : null,
+                        receiverIpField.getText(),
+                        selectedFile.getName(),
+                        selectedFile.length(),
+                        "Completed");
+
                 javafx.application.Platform.runLater(() -> {
                     Alert alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("File Transfer");
@@ -154,11 +163,10 @@ public class FileTransferController {
                     alert.setContentText("File sent successfully!");
                     alert.showAndWait();
                 });
-                
+
             } catch (Exception e) {
                 e.printStackTrace();
                 sendStatusLabel.setText("Error sending file: " + e.getMessage());
-                // Log the error for debugging
                 System.err.println("Error sending file: " + e.getMessage());
             }
         }).start();
@@ -166,7 +174,8 @@ public class FileTransferController {
 
     @FXML
     private void handleStartReceiving() {
-        if (isReceiving) return;
+        if (isReceiving)
+            return;
 
         new Thread(() -> {
             try {
@@ -182,12 +191,10 @@ public class FileTransferController {
                     Socket socket = serverSocket.accept();
                     DataInputStream dis = new DataInputStream(socket.getInputStream());
 
-                    // Receive file name and size
                     String fileName = dis.readUTF();
                     long fileSize = dis.readLong();
                     String senderIp = socket.getInetAddress().getHostAddress();
 
-                    // Prompt user to choose save location (must be on FX thread)
                     final File[] saveFile = new File[1];
                     CountDownLatch latch = new CountDownLatch(1);
                     Platform.runLater(() -> {
@@ -217,11 +224,11 @@ public class FileTransferController {
                         dis.close();
                         socket.close();
 
-                        // Update last_ip for this user (receiver) to local IP
                         try {
                             String localIp = java.net.InetAddress.getLocalHost().getHostAddress();
                             try (Connection conn = DatabaseUtil.getConnection();
-                                 PreparedStatement pstmt = conn.prepareStatement("UPDATE users SET last_ip = ? WHERE id = ?")) {
+                                    PreparedStatement pstmt = conn
+                                            .prepareStatement("UPDATE users SET last_ip = ? WHERE id = ?")) {
                                 pstmt.setString(1, localIp);
                                 pstmt.setInt(2, getCurrentUserId());
                                 pstmt.executeUpdate();
@@ -233,25 +240,22 @@ public class FileTransferController {
                         Platform.runLater(() -> {
                             receiveStatusLabel.setText("File received: " + fileName);
                             TransferRecord record = new TransferRecord(
-                                fileName,
-                                formatFileSize(fileSize),
-                                "Receive",
-                                "Completed",
-                                new Date()
-                            );
-                            transferHistory.add(0, record); // Add to top for real-time update
-                            
-                            // Log to database (receiver = current user, sender = user with sender IP if known)
+                                    fileName,
+                                    formatFileSize(fileSize),
+                                    "Receive",
+                                    "Completed",
+                                    new Date());
+                            transferHistory.add(0, record);
+
                             Integer senderId = DatabaseUtil.getUserIdByIp(senderIp);
                             DatabaseUtil.logFileTransfer(
-                                senderId != -1 ? senderId : null,
-                                getCurrentUserId(),
-                                senderIp,
-                                fileName,
-                                fileSize,
-                                "Completed"
-                            );
-                            
+                                    senderId != -1 ? senderId : null,
+                                    getCurrentUserId(),
+                                    senderIp,
+                                    fileName,
+                                    fileSize,
+                                    "Completed");
+
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             alert.setTitle("File Transfer");
                             alert.setHeaderText(null);
@@ -321,9 +325,10 @@ public class FileTransferController {
     }
 
     private String formatFileSize(long bytes) {
-        if (bytes < 1024) return bytes + " B";
+        if (bytes < 1024)
+            return bytes + " B";
         int exp = (int) (Math.log(bytes) / Math.log(1024));
-        String pre = "KMGTPE".charAt(exp-1) + "";
+        String pre = "KMGTPE".charAt(exp - 1) + "";
         return String.format("%.1f %sB", bytes / Math.pow(1024, exp), pre);
     }
 
@@ -351,10 +356,24 @@ public class FileTransferController {
             this.date = date;
         }
 
-        public String getFileName() { return fileName; }
-        public String getFileSize() { return fileSize; }
-        public String getTransferType() { return transferType; }
-        public String getStatus() { return status; }
-        public Date getDate() { return date; }
+        public String getFileName() {
+            return fileName;
+        }
+
+        public String getFileSize() {
+            return fileSize;
+        }
+
+        public String getTransferType() {
+            return transferType;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public Date getDate() {
+            return date;
+        }
     }
-} 
+}
